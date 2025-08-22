@@ -1,0 +1,34 @@
+name: VPN-AI Deploy
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Copy files to remote node
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.TANS_HOST }}
+        username: ${{ secrets.TANS_USER }}
+        key: ${{ secrets.TANS_SSH_KEY }}
+        source: "vpn-ai-deploy/*"
+        target: "/opt/vpn-ai-deploy"
+
+    - name: Run deployment script remotely
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.TANS_HOST }}
+        username: ${{ secrets.TANS_USER }}
+        key: ${{ secrets.TANS_SSH_KEY }}
+        script: |
+          cd /opt/vpn-ai-deploy
+          bash register-node.sh
+          docker compose up -d

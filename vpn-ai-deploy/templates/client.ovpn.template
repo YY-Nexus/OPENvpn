@@ -1,0 +1,19 @@
+client
+dev tun
+proto udp
+remote 8.152.195.33 1194
+resolv-retry infinite
+nobind
+persist-key
+persist-tun
+ca /etc/openvpn/client/$VPN_NAME/ca.crt
+cert /etc/openvpn/client/$VPN_NAME/client.crt
+key /etc/openvpn/client/$VPN_NAME/client.key
+tls-auth /etc/openvpn/client/$VPN_NAME/ta.key 1
+remote-cert-tls server
+data-ciphers AES-256-GCM:AES-256-CBC
+data-ciphers-fallback AES-256-CBC
+auth SHA256
+ping 10
+ping-restart 60
+verb 3

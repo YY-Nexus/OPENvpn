@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  llama:
+    image: ghcr.io/gpt4all/llama-cpp:latest
+    container_name: llama
+    restart: always
+    ports:
+      - "8080:8080"
+    volumes:
+      - /opt/models/llama:/models
+    environment:
+      - MODEL_PATH=/models/ggml-model.bin
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  whisper:
+    image: ghcr.io/openai/whisper:latest
+    container_name: whisper
+    restart: always
+    ports:
+      - "8081:8081"
+    volumes:
+      - /opt/audio:/audio
+    command: ["--model", "base", "--input", "/audio/input.wav", "--output", "/audio/output.txt"]
+
+  embedding-server:
+    image: ghcr.io/sentence-transformers/embedding-server:latest
+    container_name: embedding-server
+    restart: always
+    ports:
+      - "8082:80"
+    environment:
+      - MODEL_NAME=sentence-transformers/all-MiniLM-L6-v2
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  default:
+    name: ai-net
+    driver: bridge

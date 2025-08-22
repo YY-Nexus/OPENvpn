@@ -1,0 +1,11 @@
+[Unit]
+Description=OpenVPN Client YYC
+After=network.target
+
+[Service]
+ExecStart=/usr/sbin/openvpn --config /etc/openvpn/client/YYC/YYC.ovpn
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

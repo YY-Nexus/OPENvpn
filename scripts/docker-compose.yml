@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  llama:
+    image: ghcr.io/ggerganov/llama.cpp:latest
+    ports: ["11434:11434"]
+    volumes: ["./models:/models"]
+    restart: always
+
+  whisper:
+    image: whispercpp/server:latest
+    ports: ["5000:5000"]
+    volumes: ["./audio:/audio"]
+    restart: always
+
+  embedding:
+    image: sentence-transformers/server:latest
+    ports: ["8000:8000"]
+    restart: always

@@ -1,0 +1,6 @@
+[Unit]
+Description=VPN Health Check
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/vpn-health-check.sh
